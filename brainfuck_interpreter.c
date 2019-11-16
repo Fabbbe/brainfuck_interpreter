@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const char* load_brainfuck(char* filepath) {
+const char* load_brainfuck(char* filepath) { // just reads a file to buffer
 	char* buffer = 0;
 	long length;
 	FILE* file_ptr = fopen (filepath, "rb");
@@ -19,13 +19,14 @@ const char* load_brainfuck(char* filepath) {
 		exit(1);
 	} else {
 		fseek(file_ptr, 0, SEEK_END);
-		length = ftell(file_ptr);
+		length = ftell(file_ptr)+1; // +1 for adding a null terminator
 		fseek(file_ptr, 0, SEEK_SET);
 		buffer = malloc(length);
 		if (buffer) {
 			fread(buffer, 1, length, file_ptr);
 		}
 		fclose(file_ptr);
+		buffer[length] = '\0';
 	}
 	return (const char*)buffer;
 }
@@ -43,14 +44,12 @@ int main (unsigned int argc, char** argv) {
 
 	const char* code = load_brainfuck(filepath);
 
-	char program_data[256]; // this limits brainfuck to 256 cells :-/
+	char program_data[256] = {0}; // this limits brainfuck to 256 cells :-/
 	char* data_ptr = (char*)program_data;
 	char* code_ptr = (char*)code;
 
 	char* loop_ptr_array[256];
 	char** loop_ptr_ptr = (char**)loop_ptr_array;
-	
-
 
 	while (*code_ptr != 0x00) {
 		switch (*code_ptr) {
@@ -81,7 +80,10 @@ int main (unsigned int argc, char** argv) {
 				break;
 
 			case '.':
-				printf("%c", *data_ptr);
+				putchar(*data_ptr);
+				break; 
+			case ',':
+				*data_ptr = getchar();
 				break; 
 			// TODO: add input
 			default:
