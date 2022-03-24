@@ -44,10 +44,12 @@ int main (unsigned int argc, char** argv) {
 
 	const char* code = load_brainfuck(filepath);
 
+	// Memory of the program
 	char* program_data = (char*)calloc(5120, sizeof(char));
 	char* data_ptr = (char*)program_data;
 	char* code_ptr = (char*)code;
 
+	// This theoretically limits the amount of nested loops
 	char** loop_ptr_array = (char**)calloc(64, sizeof(char*));
 	char** loop_ptr_ptr = (char**)loop_ptr_array;
 
