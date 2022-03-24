@@ -44,11 +44,11 @@ int main (unsigned int argc, char** argv) {
 
 	const char* code = load_brainfuck(filepath);
 
-	char program_data[256] = {0}; // this limits brainfuck to 256 cells :-/
+	char* program_data = (char*)calloc(5120, sizeof(char));
 	char* data_ptr = (char*)program_data;
 	char* code_ptr = (char*)code;
 
-	char* loop_ptr_array[256];
+	char** loop_ptr_array = (char**)calloc(64, sizeof(char*));
 	char** loop_ptr_ptr = (char**)loop_ptr_array;
 
 	while (*code_ptr != 0x00) {
@@ -91,5 +91,8 @@ int main (unsigned int argc, char** argv) {
 		}
 		++code_ptr;
 	}
+
+	free(program_data);
+	free(loop_ptr_array);
 	return 0;
 }
